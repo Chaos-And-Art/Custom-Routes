@@ -3,7 +3,7 @@ import 'package:custom_routes/models/location_entry_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../services/Timer/countdown_timer.dart';
+import '../widgets/countdown_timer.dart';
 
 class CaptureLocation extends StatefulWidget {
   const CaptureLocation({super.key});
@@ -19,7 +19,7 @@ class _CaptureLocationState extends State<CaptureLocation> {
   Future<void> _getLocation() async {
     try {
       final Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
+          desiredAccuracy: LocationAccuracy.bestForNavigation);
       final newEntry = LocationEntry(
         dateTime: DateTime.now(),
         latitude: position.latitude,
@@ -66,8 +66,7 @@ class _CaptureLocationState extends State<CaptureLocation> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const TimerScreen(),
-        // TimerScreen(onRequestLocation: _requestLocationPermission()),
+        TimerScreen(onRequestLocation: _requestLocationPermission),
         ElevatedButton(
           onPressed: _requestLocationPermission,
           child: const Text('Get Location'),

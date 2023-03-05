@@ -1,5 +1,5 @@
-import 'package:custom_routes/services/Timer/timer_service.dart';
-import 'package:custom_routes/widgets/capture_location_screen.dart';
+import 'package:custom_routes/services/timer_service.dart';
+import 'package:custom_routes/screens/capture_location_screen.dart';
 import 'package:custom_routes/screens/display_location_screen.dart';
 import 'package:custom_routes/screens/location_map_screen.dart';
 import 'package:flutter/material.dart';

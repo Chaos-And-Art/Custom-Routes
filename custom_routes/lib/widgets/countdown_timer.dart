@@ -1,13 +1,13 @@
-import 'package:custom_routes/services/Timer/timer_service.dart';
+import 'package:custom_routes/services/timer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 bool _displayResetButton = false;
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({super.key, this.onRequestLocation});
+  const TimerScreen({super.key, required this.onRequestLocation});
 
-  final Future<void>? onRequestLocation;
+  final Function() onRequestLocation;
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
@@ -21,6 +21,7 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   void _restartTimer() {
+    widget.onRequestLocation();
     final timerService = Provider.of<TimerService>(context, listen: false);
     timerService.resetTimer();
     timerService.startTimer(timerFinished: () {
@@ -93,8 +94,8 @@ class _TimerScreenState extends State<TimerScreen> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    widget.onRequestLocation;
                     if (!timerService.isRunning) {
+                      widget.onRequestLocation();
                       _displayResetButton = true;
                       timerService.startTimer(timerFinished: () {
                         _restartTimer();
