@@ -28,8 +28,9 @@ class _LocationTableState extends State<LocationTable> {
         ],
         rows: sortedEntries.map((entry) {
           return DataRow(cells: [
-            DataCell(Text(DateFormat.yMd().format(entry.dateTime))),
-            DataCell(Text(DateFormat.Hm().format(entry.dateTime))),
+            // DataCell(Text(DateFormat.yMd().format(entry.dateTime))),
+            DataCell(Text(DateFormat('MMM d, yyyy').format(entry.dateTime))),
+            DataCell(Text(DateFormat('h:mm a').format(entry.dateTime))),
             DataCell(Text('${entry.latitude}')),
             DataCell(Text('${entry.longitude}')),
           ]);

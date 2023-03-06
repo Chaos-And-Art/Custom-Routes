@@ -1,6 +1,6 @@
+import 'package:custom_routes/models/location_suggestion.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-
 import '../services/search_location_service.dart';
 import '../widgets/search_location.dart';
 
@@ -37,8 +37,8 @@ class _DisplayLocationState extends State<DisplayLocation> {
             readOnly: true,
             onTap: () async {
               // generate a new token here
-              final sessionToken = Uuid().v4();
-              final Suggestion? result = await showSearch(
+              final sessionToken = const Uuid().v4();
+              final LocationSuggestion? result = await showSearch(
                 context: context,
                 delegate: AddressSearch(sessionToken),
               );
@@ -55,18 +55,18 @@ class _DisplayLocationState extends State<DisplayLocation> {
                 });
               }
             },
-            decoration: InputDecoration(
-              icon: Container(
+            decoration: const InputDecoration(
+              icon: SizedBox(
                 width: 10,
                 height: 10,
-                child: const Icon(
+                child: Icon(
                   Icons.home,
                   color: Colors.black,
                 ),
               ),
               hintText: "Enter your shipping address",
               border: InputBorder.none,
-              contentPadding: const EdgeInsets.only(left: 8.0, top: 16.0),
+              contentPadding: EdgeInsets.only(left: 8.0, top: 16.0),
             ),
           ),
           const SizedBox(height: 20.0),

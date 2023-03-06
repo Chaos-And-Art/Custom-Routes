@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
 
-class AddressSearch extends SearchDelegate<Suggestion> {
+class AddressSearch extends SearchDelegate<LocationSuggestion> {
   AddressSearch(this.sessionToken) : apiClient = PlaceApiProvider(sessionToken);
 
-  final sessionToken;
+  final Object sessionToken;
   final PlaceApiProvider apiClient;
 
   @override
@@ -26,7 +27,7 @@ class AddressSearch extends SearchDelegate<Suggestion> {
       tooltip: 'Back',
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
-        close(context, Suggestion.empty());
+        close(context, LocationSuggestion.empty());
       },
     );
   }

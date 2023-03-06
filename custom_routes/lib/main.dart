@@ -3,9 +3,13 @@ import 'package:custom_routes/screens/capture_location_screen.dart';
 import 'package:custom_routes/screens/display_location_screen.dart';
 import 'package:custom_routes/screens/location_map_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => TimerService(),
@@ -40,7 +44,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   int _currentIndex = 0;
 
   final List<Widget> _views = [
@@ -49,10 +52,29 @@ class _MyHomePageState extends State<MyHomePage> {
     const DisplayLocation(),
   ];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    if (await Permission.location.serviceStatus.isEnabled) {
+      // Has Permission Already
+    } else {
+      //Does not have permission
+    }
+
+    final permissionStatus = await Permission.location.status;
+    if (permissionStatus.isGranted) {
+      // _captureCurrentLocation();
+    } else {
+      await [Permission.location].request();
+    }
+
+    if (await Permission.location.isPermanentlyDenied) {
+      openAppSettings();
+    }
   }
 
   @override
@@ -71,12 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[_views[_currentIndex]],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          //We will use this to start a new location tracking
-          onPressed: _incrementCounter,
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,

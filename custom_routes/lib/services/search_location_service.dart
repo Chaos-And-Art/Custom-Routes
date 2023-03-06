@@ -1,59 +1,29 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:custom_routes/models/location_place.dart';
+import 'package:custom_routes/models/location_suggestion.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
-
 import 'package:http/http.dart';
-
-class Place {
-  String? streetNumber;
-  String? street;
-  String? city;
-  String? zipCode;
-
-  Place({
-    this.streetNumber,
-    this.street,
-    this.city,
-    this.zipCode,
-  });
-
-  @override
-  String toString() {
-    return 'Place(streetNumber: $streetNumber, street: $street, city: $city, zipCode: $zipCode)';
-  }
-}
-
-class Suggestion {
-  final String placeId;
-  final String description;
-
-  Suggestion(this.placeId, this.description);
-
-  @override
-  String toString() {
-    return 'Suggestion(description: $description, placeId: $placeId)';
-  }
-
-  static Suggestion empty() {
-    return Suggestion('', '');
-  }
-}
 
 class PlaceApiProvider {
   final client = Client();
 
   PlaceApiProvider(this.sessionToken);
 
-  final sessionToken;
+  final Object sessionToken;
 
-  static const String androidKey = 'AIzaSyDdnpS0o3UFAKF8dvtaSqjyOStJblXxOPc';
-  static const String iosKey = 'YOUR_API_KEY_HERE';
+  static String? androidKey = dotenv.env['ANDROID_GOOGLE_MAPS_API'];
+  static String? iosKey = dotenv.env['IOS_GOOGLE_MAPS_API'];
   final apiKey = Platform.isAndroid ? androidKey : iosKey;
 
-  Future<List<Suggestion>> fetchSuggestions(String input, String lang) async {
+  Future<List<LocationSuggestion>> fetchSuggestions(
+      String input, String lang) async {
     // get user's current location
     final position = await Geolocator.getCurrentPosition();
+    // final position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.lowest);
     final placemarks =
         await placemarkFromCoordinates(position.latitude, position.longitude);
     final countryCode = placemarks.first.isoCountryCode;
@@ -67,7 +37,8 @@ class PlaceApiProvider {
       if (result['status'] == 'OK') {
         // compose suggestions in a list
         return result['predictions']
-            .map<Suggestion>((p) => Suggestion(p['place_id'], p['description']))
+            .map<LocationSuggestion>(
+                (p) => LocationSuggestion(p['place_id'], p['description']))
             .toList();
       }
       if (result['status'] == 'ZERO_RESULTS') {
@@ -79,7 +50,7 @@ class PlaceApiProvider {
     }
   }
 
-  Future<Place> getPlaceDetailFromId(String placeId) async {
+  Future<LocationPlace> getPlaceDetailFromId(String placeId) async {
     final request =
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=address_component&key=$apiKey&sessiontoken=$sessionToken';
     final response = await client.get(Uri.parse(request));
@@ -90,7 +61,7 @@ class PlaceApiProvider {
         final components =
             result['result']['address_components'] as List<dynamic>;
         // build result
-        final place = Place();
+        final place = LocationPlace();
         for (var c in components) {
           final List type = c['types'];
           if (type.contains('street_number')) {
