@@ -3,10 +3,10 @@ import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
 
 class AddressSearch extends SearchDelegate<LocationSuggestion> {
-  AddressSearch(this.sessionToken) : apiClient = PlaceApiProvider(sessionToken);
+  AddressSearch(this.sessionToken) : searchLocationService = SearchLocationService(sessionToken: sessionToken);
 
   final Object sessionToken;
-  final PlaceApiProvider apiClient;
+  final SearchLocationService searchLocationService;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -45,14 +45,16 @@ class AddressSearch extends SearchDelegate<LocationSuggestion> {
   @override
   Widget buildSuggestions(BuildContext context) {
     return FutureBuilder(
-      future: query == ""
-          ? null
-          : apiClient.fetchSuggestions(
-              query, Localizations.localeOf(context).languageCode),
+      future: query == "" ? null : searchLocationService.fetchSuggestionsOnSearch(query, Localizations.localeOf(context).languageCode),
       builder: (context, snapshot) => query == ''
           ? Container(
               padding: const EdgeInsets.all(16.0),
-              child: const Text('Enter your address'),
+              child: const Text(
+                'Enter a location/address',
+                style: TextStyle(
+                  fontSize: 18.0,
+                ),
+              ),
             )
           : snapshot.hasData
               ? ListView.builder(
@@ -64,7 +66,15 @@ class AddressSearch extends SearchDelegate<LocationSuggestion> {
                   ),
                   itemCount: snapshot.data?.length,
                 )
-              : const Text('Loading...'),
+              : Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: const Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
     );
   }
 }

@@ -72,12 +72,7 @@ class _TimerScreenState extends State<TimerScreen> {
             SizedBox(
               width: 200.0,
               height: 200.0,
-              child: CircularProgressIndicator(
-                  value:
-                      timerService.counter / timerService.selectedTimeInSeconds,
-                  strokeWidth: 6.0,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue)),
+              child: CircularProgressIndicator(value: timerService.counter / timerService.selectedTimeInSeconds, strokeWidth: 6.0, backgroundColor: Colors.grey[300], valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue)),
             ),
             Text(
               _formatTime(timerService.counter),

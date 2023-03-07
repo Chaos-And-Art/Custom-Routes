@@ -15,8 +15,7 @@ class LocationTable extends StatefulWidget {
 class _LocationTableState extends State<LocationTable> {
   @override
   Widget build(BuildContext context) {
-    final sortedEntries = widget.entries.toList()
-      ..sort((a, b) => b.dateTime.compareTo(a.dateTime));
+    final sortedEntries = widget.entries.toList()..sort((a, b) => b.dateTime.compareTo(a.dateTime));
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: DataTable(

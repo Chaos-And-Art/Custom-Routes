@@ -1,3 +1,5 @@
+import 'package:custom_routes/models/trip_details_model.dart';
+import 'package:custom_routes/screens/create_trip_screen.dart';
 import 'package:custom_routes/services/timer_service.dart';
 import 'package:custom_routes/screens/capture_location_screen.dart';
 import 'package:custom_routes/screens/display_location_screen.dart';
@@ -30,6 +32,10 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Custom Routes'),
+      routes: {
+        '/capture_location': (context) => const CaptureLocation(),
+      },
+      initialRoute: "/",
     );
   }
 }
@@ -58,6 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
     _requestLocationPermission();
   }
 
+/*
+  Eventually we will have a login screen, so will need to move this logic to 
+  the first time they create an account/login, since they will have to agree 
+  to the terms and conditions
+*/
   Future<void> _requestLocationPermission() async {
     if (await Permission.location.serviceStatus.isEnabled) {
       // Has Permission Already
@@ -69,7 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
     if (permissionStatus.isGranted) {
       // _captureCurrentLocation();
     } else {
-      await [Permission.location].request();
+      await [
+        Permission.location
+      ].request();
     }
 
     if (await Permission.location.isPermanentlyDenied) {
@@ -91,8 +104,22 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[_views[_currentIndex]],
+            children: <Widget>[
+              _views[_currentIndex]
+            ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateTrip(),
+              ),
+            );
+          },
+          // backgroundColor: Colors.green,
+          child: const Icon(Icons.add),
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,

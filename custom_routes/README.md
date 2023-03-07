@@ -20,6 +20,7 @@ the travels tracking their location will also be able to view their trips and se
 - Make screen show map based on selected trip
 - Make it so the other screen can show the location data based on selected trip. When selecting a trip, you can edit it to remove or add
   locations, or change the precision of the location. Then when they save it, the database is updated.
+- Not only will you be able to link blogs to certain locations, but also images or videos. Could turn it kind of into a social media platform
 
 ## Getting Started
 
