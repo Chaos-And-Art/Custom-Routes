@@ -23,6 +23,7 @@ class _CreateTripState extends State<CreateTrip> {
   late LocationPlace startingLocation;
   final sessionToken = const Uuid().v4();
   String estimatedArrival = "";
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -32,6 +33,7 @@ class _CreateTripState extends State<CreateTrip> {
 
   @override
   void dispose() {
+    _isDisposed = true;
     _tripNameController.dispose();
     _startingPointController.dispose();
     _destinationController.dispose();
@@ -43,7 +45,9 @@ class _CreateTripState extends State<CreateTrip> {
     final suggestedStartingLocation = await searchLocationService.fetchSuggestionsOnPosition();
     startingLocation = await searchLocationService.getPlaceDetailFromId(suggestedStartingLocation.placeId);
     tripDetails.startingPoint = "${startingLocation.streetNumber ?? ''} ${startingLocation.street ?? ''}, ${startingLocation.city ?? ''}, ${startingLocation.state ?? ''}";
-    _startingPointController.text = tripDetails.startingPoint!;
+    if (!_isDisposed) {
+      _startingPointController.text = tripDetails.startingPoint!;
+    }
   }
 
 //May be able to remove these handles
@@ -57,9 +61,9 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   void _createNewTrip(TripDetails trip) {
-    // Navigator.pop(context, {
-    //   'tripDetails': tripDetails
-    // });
+    Navigator.pop(context, {
+      'tripDetails': tripDetails
+    });
     // Navigator.pushNamedAndRemoveUntil(
     //   context,
     //   '/home_page',
