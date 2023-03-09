@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../widgets/tab_navigator.dart';
-import 'capture_location_screen.dart';
 import 'create_trip_screen.dart';
-import 'display_location_screen.dart';
-import 'location_map_screen.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

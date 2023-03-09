@@ -117,7 +117,7 @@ class SearchLocationService {
 
   Future<LocationPlace> getPlaceDetailsFromPosition(Position position) async {
     LocationPlace locationPlace = LocationPlace();
-    final request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$apiKey';
+    final request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$apiKey&sessiontoken=$sessionToken';
     final response = await client.get(Uri.parse(request));
 
     if (response.statusCode == 200) {
@@ -161,7 +161,7 @@ class SearchLocationService {
     TripDetails tripDetails = TripDetails();
 
     if (origin != null && destination != null) {
-      final request = 'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=$apiKey';
+      final request = 'https://maps.googleapis.com/maps/api/directions/json?origin=$origin&destination=$destination&key=$apiKey&sessiontoken=$sessionToken';
 
       final response = await client.get(Uri.parse(request));
 
@@ -173,7 +173,7 @@ class SearchLocationService {
           final leg = route['legs'][0];
 
           tripDetails.distance = formatDistance(leg['distance']['value']);
-          tripDetails.duration = formatDuration(leg['duration']['value']);
+          tripDetails.expectedDuration = formatDuration(leg['duration']['value']);
 
           return tripDetails;
         } else {

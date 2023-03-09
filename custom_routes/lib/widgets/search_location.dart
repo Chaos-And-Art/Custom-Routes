@@ -3,9 +3,10 @@ import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
 
 class AddressSearch extends SearchDelegate<LocationSuggestion> {
-  AddressSearch(this.sessionToken) : searchLocationService = SearchLocationService(sessionToken: sessionToken);
+  AddressSearch(this.sessionToken, this.currentChoice) : searchLocationService = SearchLocationService(sessionToken: sessionToken);
 
   final Object sessionToken;
+  final String currentChoice;
   final SearchLocationService searchLocationService;
 
   @override

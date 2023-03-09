@@ -1,14 +1,11 @@
-import 'package:custom_routes/models/trip_details_model.dart';
-import 'package:custom_routes/screens/create_trip_screen.dart';
 import 'package:custom_routes/screens/my_home_page_screen.dart';
 import 'package:custom_routes/services/timer_service.dart';
-import 'package:custom_routes/screens/capture_location_screen.dart';
-import 'package:custom_routes/screens/display_location_screen.dart';
-import 'package:custom_routes/screens/location_map_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import 'blocs/create_trip/create_trip_bloc.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -26,17 +23,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Custom Routes',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => CreateTripBloc()),
+      ],
+      child: MaterialApp(
+        title: 'Custom Routes',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        debugShowCheckedModeBanner: false,
+        home: const MyHomePage(title: 'Custom Routes'),
       ),
-      debugShowCheckedModeBanner: false,
-      home: const MyHomePage(title: 'Custom Routes'),
-      routes: {
-        '/capture_location': (context) => const CaptureLocation(),
-      },
-      initialRoute: "/",
     );
   }
 }

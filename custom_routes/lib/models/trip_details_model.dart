@@ -1,10 +1,11 @@
 class TripDetails {
   String? name;
   DateTime? startDateTime;
-  String? startingPoint;
+  DateTime? endDateTime;
+  String? origin;
   String? destination;
   String? distance;
-  String? duration;
+  String? expectedDuration;
 
-  TripDetails({this.name, this.startDateTime, this.startingPoint, this.destination, this.distance, this.duration});
+  TripDetails({this.name, this.startDateTime, this.endDateTime, this.origin, this.destination, this.distance, this.expectedDuration});
 }

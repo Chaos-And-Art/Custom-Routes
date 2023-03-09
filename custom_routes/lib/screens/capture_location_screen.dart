@@ -1,4 +1,3 @@
-import 'package:accordion/accordion.dart';
 import 'package:custom_routes/widgets/current_trip.dart';
 import 'package:custom_routes/widgets/location_table.dart';
 import 'package:custom_routes/models/location_entry_model.dart';
@@ -34,21 +33,28 @@ class _CaptureLocationState extends State<CaptureLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: ListView(
-          children: [
-            TimerScreen(onRequestLocation: _captureCurrentLocation),
-            ElevatedButton(
-              onPressed: _captureCurrentLocation,
-              child: const Text('Get Location'),
+    return Scaffold(
+      body: ListView(
+        children: [
+          TimerScreen(onRequestLocation: _captureCurrentLocation),
+          const SizedBox(
+            height: 10,
+          ),
+          Center(
+            child: SizedBox(
+              width: 150,
+              height: 35,
+              child: ElevatedButton(
+                onPressed: _captureCurrentLocation,
+                child: const Text('Get Location'),
+              ),
             ),
-            const SizedBox(height: 20.0),
-            const CurrentTrip(),
-            const SizedBox(height: 20.0),
-            LocationTable(entries: _entries),
-          ],
-        ),
+          ),
+          const SizedBox(height: 20.0),
+          const CurrentTrip(),
+          const SizedBox(height: 20.0),
+          LocationTable(entries: _entries),
+        ],
       ),
     );
   }
