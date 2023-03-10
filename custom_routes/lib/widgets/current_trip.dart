@@ -35,72 +35,128 @@ class _CurrentTripState extends State<CurrentTrip> {
                 leftIcon: const Icon(Icons.insights_rounded, color: Colors.white),
                 headerBackgroundColor: Colors.black,
                 headerBackgroundColorOpened: Colors.red,
-                header: Text(state.data.name ?? "Trip Name NULL", style: _headerStyle),
+                header: Text(state.data.name ?? "-----", style: _headerStyle),
                 contentHorizontalPadding: 10,
                 contentBorderWidth: 1,
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Trip Name:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.name ?? "---"),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.name ?? "---",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Start Date/Time:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.startDateTime?.toString().isNotEmpty == true ? state.data.startDateTime.toString() : "Waiting to Start...")
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.startDateTime?.toString().isNotEmpty == true ? state.data.startDateTime.toString() : "Waiting to Start...",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("End Date/Time:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.endDateTime?.toString().isNotEmpty == true ? state.data.endDateTime.toString() : "TBD")
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.endDateTime?.toString().isNotEmpty == true ? state.data.endDateTime.toString() : "TBD",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Origin:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.origin ?? "---"),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.origin ?? "---",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Destination:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.destination ?? "---"),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.destination ?? "---",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Distance:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.distance ?? "---"),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.distance ?? "---",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
                     Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Expected Duration:", style: TextStyle(fontWeight: FontWeight.bold)),
                         const SizedBox(width: 10),
-                        Text(state.data.expectedDuration ?? "---"),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            state.data.expectedDuration ?? "---",
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                            maxLines: 2,
+                          ),
+                        ),
                       ],
                     ),
                   ],

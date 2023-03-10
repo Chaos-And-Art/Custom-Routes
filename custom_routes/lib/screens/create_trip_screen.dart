@@ -45,8 +45,7 @@ class _CreateTripState extends State<CreateTrip> {
   _getStartingPointLocation() async {
     SearchLocationService searchLocationService = SearchLocationService(sessionToken: sessionToken);
     final suggestedStartingLocation = await searchLocationService.fetchSuggestionsOnPosition();
-    startingLocation = await searchLocationService.getPlaceDetailFromId(suggestedStartingLocation.placeId);
-    tripDetails.origin = "${startingLocation.streetNumber ?? ''} ${startingLocation.street ?? ''}, ${startingLocation.city ?? ''}, ${startingLocation.state ?? ''}";
+    tripDetails.origin = suggestedStartingLocation.description;
     if (!_isDisposed) {
       _startingPointController.text = tripDetails.origin!;
     }
@@ -138,13 +137,16 @@ class _CreateTripState extends State<CreateTrip> {
                     final LocationSuggestion? result = await showSearch(
                       context: context,
                       delegate: AddressSearch(sessionToken, _startingPointController.text),
+                      query: _startingPointController.text,
                     );
                     if (result != null) {
                       tripDetails.origin = result.description;
-                      final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
-                      if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
-                        tripDetails.distance = tempDetails.distance;
-                        tripDetails.expectedDuration = tempDetails.expectedDuration;
+                      if (tripDetails.origin?.toString().isNotEmpty == true && tripDetails.destination?.toString().isNotEmpty == true) {
+                        final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
+                        if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
+                          tripDetails.distance = tempDetails.distance;
+                          tripDetails.expectedDuration = tempDetails.expectedDuration;
+                        }
                       }
                       setState(() {
                         _startingPointController.text = result.description;
@@ -172,13 +174,16 @@ class _CreateTripState extends State<CreateTrip> {
                     final LocationSuggestion? result = await showSearch(
                       context: context,
                       delegate: AddressSearch(sessionToken, _destinationController.text),
+                      query: _destinationController.text,
                     );
                     if (result != null) {
                       tripDetails.destination = result.description;
-                      final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
-                      if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
-                        tripDetails.distance = tempDetails.distance;
-                        tripDetails.expectedDuration = tempDetails.expectedDuration;
+                      if (tripDetails.origin?.toString().isNotEmpty == true && tripDetails.destination?.toString().isNotEmpty == true) {
+                        final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
+                        if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
+                          tripDetails.distance = tempDetails.distance;
+                          tripDetails.expectedDuration = tempDetails.expectedDuration;
+                        }
                       }
                       setState(() {
                         _destinationController.text = result.description;

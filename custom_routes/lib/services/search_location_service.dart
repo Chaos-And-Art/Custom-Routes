@@ -44,22 +44,17 @@ class SearchLocationService {
   }
 
   Future<LocationSuggestion> fetchSuggestionsOnPosition() async {
-    // get user's current location
     final position = await Geolocator.getCurrentPosition();
-    final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
-    final countryCode = placemarks.first.isoCountryCode;
-    final suggestedLocation = await getPlaceDetailsFromPosition(position);
-    //Had trouble trying to put a position into the query and get the suggestedPosition, so instead we send in an input, which seems to work
-    final input = "${suggestedLocation.streetNumber}  ${suggestedLocation.street}, ${suggestedLocation.city} ${suggestedLocation.state}";
 
-    final request = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=address&language=en&components=country:$countryCode&key=$apiKey&sessiontoken=$sessionToken';
+    final request = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$apiKey&sessiontoken=$sessionToken';
     final response = await client.get(Uri.parse(request));
 
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
       if (result['status'] == 'OK') {
-        final prediction = result['predictions'].first;
-        return LocationSuggestion(prediction['place_id'], prediction['description']);
+        final address = result['results'][0]['formatted_address'];
+        final placeID = result['results'][0]['place_id'];
+        return LocationSuggestion(placeID, address);
       }
       if (result['status'] == 'ZERO_RESULTS') {
         return LocationSuggestion.empty();
@@ -156,7 +151,6 @@ class SearchLocationService {
     }
   }
 
-//BUG If you choose Destination first then starting destination if you clear starting destination
   Future<TripDetails> getTravelTime(String? origin, String? destination) async {
     TripDetails tripDetails = TripDetails();
 
