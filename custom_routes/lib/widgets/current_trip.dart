@@ -3,8 +3,8 @@ import 'package:accordion/controllers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/create_trip/create_trip_bloc.dart';
-import '../blocs/create_trip/create_trip_state.dart';
+import '../blocs/manage_trips/manage_trip_bloc.dart';
+import '../blocs/manage_trips/manage_trip_state.dart';
 
 class CurrentTrip extends StatefulWidget {
   const CurrentTrip({super.key});
@@ -18,7 +18,7 @@ class _CurrentTripState extends State<CurrentTrip> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CreateTripBloc, CreateTripState>(
+    return BlocBuilder<ManageTripBloc, ManageTripState>(
       builder: (context, state) {
         if (state is SendNewTripDataState) {
           return Accordion(
@@ -83,7 +83,7 @@ class _CurrentTripState extends State<CurrentTrip> {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            state.data.endDateTime?.toString().isNotEmpty == true ? state.data.endDateTime.toString() : "TBD",
+                            state.data.endDateTime?.toString().isNotEmpty == true ? state.data.endDateTime.toString() : "---",
                             softWrap: true,
                             overflow: TextOverflow.visible,
                             maxLines: 2,

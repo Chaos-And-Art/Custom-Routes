@@ -1,11 +1,9 @@
 class LocationEntry {
-  final DateTime dateTime;
-  final double latitude;
-  final double longitude;
+  int? key;
+  DateTime dateTime;
+  double latitude;
+  double longitude;
+  bool isSelected;
 
-  LocationEntry({
-    required this.dateTime,
-    required this.latitude,
-    required this.longitude,
-  });
+  LocationEntry({required this.key, required this.dateTime, required this.latitude, required this.longitude, required this.isSelected});
 }

@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:custom_routes/models/trip_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
-import '../blocs/create_trip/create_trip_bloc.dart';
-import '../blocs/create_trip/create_trip_event.dart';
+import '../blocs/manage_trips/manage_trip_bloc.dart';
+import '../blocs/manage_trips/manage_trip_event.dart';
 import '../models/location_place.dart';
 import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
@@ -52,7 +54,8 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   void _createNewTrip() {
-    final myBloc = BlocProvider.of<CreateTripBloc>(context);
+    tripDetails.tripID = Random().nextInt(1000); //WILL NEED TO COME UP WITH A BETTER ID SETTER
+    final myBloc = BlocProvider.of<ManageTripBloc>(context);
     myBloc.add(SendNewTripDataEvent(tripDetails));
     Navigator.pop(context);
   }
