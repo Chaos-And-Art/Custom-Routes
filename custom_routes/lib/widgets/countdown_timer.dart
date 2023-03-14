@@ -99,9 +99,24 @@ class _TimerScreenState extends State<TimerScreen> {
                       timerService.pauseTimer();
                     }
                   },
-                  child: Text(
-                    timerService.isRunning ? 'Pause' : 'Start',
-                    style: const TextStyle(fontSize: 18),
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(16.0),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        timerService.isRunning ? Icons.pause : Icons.play_arrow,
+                        size: 45.0,
+                        color: Colors.white,
+                      ),
+                      // const SizedBox(height: 8.0),
+                      // Text(
+                      //   timerService.isRunning ? 'Pause' : 'Start',
+                      //   style: const TextStyle(fontSize: 18),
+                      // ),
+                    ],
                   ),
                 ),
               ],

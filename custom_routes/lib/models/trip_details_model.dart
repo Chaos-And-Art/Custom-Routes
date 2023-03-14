@@ -1,4 +1,5 @@
 class TripDetails {
+  int? tripID;
   String? name;
   DateTime? startDateTime;
   DateTime? endDateTime;

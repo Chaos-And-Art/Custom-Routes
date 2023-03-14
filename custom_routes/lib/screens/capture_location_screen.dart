@@ -1,8 +1,12 @@
+import 'package:custom_routes/blocs/manage_trips/manage_trip_event.dart';
 import 'package:custom_routes/widgets/current_trip.dart';
 import 'package:custom_routes/widgets/location_table.dart';
 import 'package:custom_routes/models/location_entry_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import '../blocs/manage_trips/manage_trip_bloc.dart';
+import '../blocs/manage_trips/manage_trip_state.dart';
 import '../widgets/countdown_timer.dart';
 
 final List<LocationEntry> _entries = [];
@@ -18,11 +22,7 @@ class _CaptureLocationState extends State<CaptureLocation> {
   Future<void> _captureCurrentLocation() async {
     try {
       final Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.bestForNavigation);
-      final newEntry = LocationEntry(
-        dateTime: DateTime.now(),
-        latitude: position.latitude,
-        longitude: position.longitude,
-      );
+      final newEntry = LocationEntry(key: null, dateTime: DateTime.now(), latitude: position.latitude, longitude: position.longitude, isSelected: false);
       setState(() {
         _entries.add(newEntry);
       });
@@ -33,29 +33,48 @@ class _CaptureLocationState extends State<CaptureLocation> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ListView(
-        children: [
-          TimerScreen(onRequestLocation: _captureCurrentLocation),
-          const SizedBox(
-            height: 10,
-          ),
-          Center(
-            child: SizedBox(
-              width: 150,
-              height: 35,
-              child: ElevatedButton(
-                onPressed: _captureCurrentLocation,
-                child: const Text('Get Location'),
-              ),
+    return BlocBuilder<ManageTripBloc, ManageTripState>(
+      builder: (context, state) {
+        if (state is SendNewTripDataState) {
+          //NEED TO INSERT POPUP HERE STATING IF YOU CREATE A NEW TRIP THE CURRENT TRIP WILL BE CANCELED
+          return Scaffold(
+            body: ListView(
+              children: [
+                TimerScreen(onRequestLocation: _captureCurrentLocation),
+                const SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _captureCurrentLocation,
+                      child: const Text('Add Location'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Extra Button'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        final myBloc = BlocProvider.of<ManageTripBloc>(context);
+                        myBloc.add(CancelTripEvent("")); //WILL NEED TO PASS IN CORRECT ID
+                      },
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red[400]),
+                      child: const Text('Cancel Trip'),
+                    ),
+                  ],
+                ),
+                const CurrentTrip(),
+                LocationTable(entries: _entries),
+                const SizedBox(
+                  height: 75,
+                )
+              ],
             ),
-          ),
-          const SizedBox(height: 20.0),
-          const CurrentTrip(),
-          const SizedBox(height: 20.0),
-          LocationTable(entries: _entries),
-        ],
-      ),
+          );
+        } else {
+          return const SizedBox(height: 0);
+        }
+      },
     );
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-import 'blocs/create_trip/create_trip_bloc.dart';
+import 'blocs/manage_trips/manage_trip_bloc.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => CreateTripBloc()),
+        BlocProvider(create: (_) => ManageTripBloc()),
       ],
       child: MaterialApp(
         title: 'Custom Routes',

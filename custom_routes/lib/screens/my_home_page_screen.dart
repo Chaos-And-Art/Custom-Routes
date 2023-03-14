@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../blocs/manage_trips/manage_trip_bloc.dart';
+import '../blocs/manage_trips/manage_trip_state.dart';
 import '../widgets/tab_navigator.dart';
 import 'create_trip_screen.dart';
 
@@ -104,18 +107,25 @@ class _MyHomePageState extends State<MyHomePage> {
             _buildOffstageNavigator("LocationMap"),
             _buildOffstageNavigator("DisplayLocation"),
           ]),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CreateTrip(),
-                ),
+          floatingActionButton: BlocBuilder<ManageTripBloc, ManageTripState>(builder: (context, state) {
+            if (state is SendNewTripDataState) {
+              //NEED TO INSERT POPUP HERE STATING IF YOU CREATE A NEW TRIP THE CURRENT TRIP WILL BE CANCELED
+              return const SizedBox(height: 0);
+            } else {
+              return FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateTrip(),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.green,
+                child: const Icon(Icons.add),
               );
-            },
-            // backgroundColor: Colors.green,
-            child: const Icon(Icons.add),
-          ),
+            }
+          }),
           bottomNavigationBar: BottomNavigationBar(
             selectedItemColor: Colors.blueAccent,
             onTap: (int index) {
