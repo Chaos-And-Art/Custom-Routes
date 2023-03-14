@@ -6,13 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../blocs/manage_trips/manage_trip_bloc.dart';
 import '../blocs/manage_trips/manage_trip_event.dart';
-import '../models/location_place.dart';
 import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
 import '../widgets/search_location.dart';
 
 class CreateTrip extends StatefulWidget {
-  const CreateTrip({super.key});
+  const CreateTrip({super.key, required this.tripDetails});
+
+  final TripDetails? tripDetails;
 
   @override
   State<CreateTrip> createState() => _CreateTripState();
@@ -23,16 +24,21 @@ class _CreateTripState extends State<CreateTrip> {
   final _startingPointController = TextEditingController();
   final _destinationController = TextEditingController();
 
-  TripDetails tripDetails = TripDetails();
-  late LocationPlace startingLocation;
-  final sessionToken = const Uuid().v4();
-  String estimatedArrival = "";
+  TripDetails _tripDetails = TripDetails();
+  final _sessionToken = const Uuid().v4();
   bool _isDisposed = false;
 
   @override
   void initState() {
     super.initState();
-    _getStartingPointLocation();
+    if (widget.tripDetails?.tripID != null) {
+      _tripDetails = widget.tripDetails!;
+      _tripNameController.text = _tripDetails.name!;
+      _startingPointController.text = _tripDetails.origin!;
+      _destinationController.text = _tripDetails.destination!;
+    } else {
+      _getStartingPointLocation();
+    }
   }
 
   @override
@@ -45,18 +51,18 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   _getStartingPointLocation() async {
-    SearchLocationService searchLocationService = SearchLocationService(sessionToken: sessionToken);
+    SearchLocationService searchLocationService = SearchLocationService(sessionToken: _sessionToken);
     final suggestedStartingLocation = await searchLocationService.fetchSuggestionsOnPosition();
-    tripDetails.origin = suggestedStartingLocation.description;
+    _tripDetails.origin = suggestedStartingLocation.description;
     if (!_isDisposed) {
-      _startingPointController.text = tripDetails.origin!;
+      _startingPointController.text = _tripDetails.origin!;
     }
   }
 
   void _createNewTrip() {
-    tripDetails.tripID = Random().nextInt(1000); //WILL NEED TO COME UP WITH A BETTER ID SETTER
+    _tripDetails.tripID = Random().nextInt(1000); //WILL NEED TO COME UP WITH A BETTER ID SETTER
     final myBloc = BlocProvider.of<ManageTripBloc>(context);
-    myBloc.add(SendNewTripDataEvent(tripDetails));
+    myBloc.add(SendNewTripDataEvent(_tripDetails));
     Navigator.pop(context);
   }
 
@@ -121,7 +127,7 @@ class _CreateTripState extends State<CreateTrip> {
                     contentPadding: EdgeInsets.only(left: 8.0),
                   ),
                   onChanged: (value) {
-                    tripDetails.name = value;
+                    _tripDetails.name = value;
                   },
                 ),
                 const SizedBox(height: 20.0),
@@ -139,16 +145,16 @@ class _CreateTripState extends State<CreateTrip> {
                   onTap: () async {
                     final LocationSuggestion? result = await showSearch(
                       context: context,
-                      delegate: AddressSearch(sessionToken, _startingPointController.text),
+                      delegate: AddressSearch(_sessionToken, _startingPointController.text),
                       query: _startingPointController.text,
                     );
                     if (result != null) {
-                      tripDetails.origin = result.description;
-                      if (tripDetails.origin?.toString().isNotEmpty == true && tripDetails.destination?.toString().isNotEmpty == true) {
-                        final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
+                      _tripDetails.origin = result.description;
+                      if (_tripDetails.origin?.toString().isNotEmpty == true && _tripDetails.destination?.toString().isNotEmpty == true) {
+                        final tempDetails = await SearchLocationService(sessionToken: _sessionToken).getTravelTime(_tripDetails.origin, _tripDetails.destination);
                         if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
-                          tripDetails.distance = tempDetails.distance;
-                          tripDetails.expectedDuration = tempDetails.expectedDuration;
+                          _tripDetails.distance = tempDetails.distance;
+                          _tripDetails.expectedDuration = tempDetails.expectedDuration;
                         }
                       }
                       setState(() {
@@ -176,16 +182,16 @@ class _CreateTripState extends State<CreateTrip> {
                   onTap: () async {
                     final LocationSuggestion? result = await showSearch(
                       context: context,
-                      delegate: AddressSearch(sessionToken, _destinationController.text),
+                      delegate: AddressSearch(_sessionToken, _destinationController.text),
                       query: _destinationController.text,
                     );
                     if (result != null) {
-                      tripDetails.destination = result.description;
-                      if (tripDetails.origin?.toString().isNotEmpty == true && tripDetails.destination?.toString().isNotEmpty == true) {
-                        final tempDetails = await SearchLocationService(sessionToken: sessionToken).getTravelTime(tripDetails.origin, tripDetails.destination);
+                      _tripDetails.destination = result.description;
+                      if (_tripDetails.origin?.toString().isNotEmpty == true && _tripDetails.destination?.toString().isNotEmpty == true) {
+                        final tempDetails = await SearchLocationService(sessionToken: _sessionToken).getTravelTime(_tripDetails.origin, _tripDetails.destination);
                         if (tempDetails.distance != null && tempDetails.expectedDuration != null) {
-                          tripDetails.distance = tempDetails.distance;
-                          tripDetails.expectedDuration = tempDetails.expectedDuration;
+                          _tripDetails.distance = tempDetails.distance;
+                          _tripDetails.expectedDuration = tempDetails.expectedDuration;
                         }
                       }
                       setState(() {
@@ -209,7 +215,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(height: 8.0),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: tripDetails.distance?.isNotEmpty == true ? Text(tripDetails.distance!, style: Theme.of(context).inputDecorationTheme.labelStyle) : const Text("Waiting to calculate...", style: TextStyle(color: Colors.grey)),
+                  child: _tripDetails.distance?.isNotEmpty == true ? Text(_tripDetails.distance!, style: Theme.of(context).inputDecorationTheme.labelStyle) : const Text("Waiting to calculate...", style: TextStyle(color: Colors.grey)),
                 ),
                 const SizedBox(height: 20.0),
                 const Text(
@@ -222,7 +228,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(height: 8.0),
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0),
-                  child: tripDetails.expectedDuration?.isNotEmpty == true ? Text(tripDetails.expectedDuration!, style: Theme.of(context).inputDecorationTheme.labelStyle) : const Text("Waiting to calculate...", style: TextStyle(color: Colors.grey)),
+                  child: _tripDetails.expectedDuration?.isNotEmpty == true ? Text(_tripDetails.expectedDuration!, style: Theme.of(context).inputDecorationTheme.labelStyle) : const Text("Waiting to calculate...", style: TextStyle(color: Colors.grey)),
                 ),
                 const SizedBox(
                   height: 50,

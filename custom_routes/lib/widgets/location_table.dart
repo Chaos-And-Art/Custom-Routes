@@ -14,6 +14,7 @@ class LocationTable extends StatefulWidget {
 
 class _LocationTableState extends State<LocationTable> {
   int? _selectedIndex = -1;
+  final ScrollController _scrollController = ScrollController();
 
   Future<void> showActionDialog(BuildContext context, LocationEntry entry) async {
     return showDialog<void>(
@@ -66,61 +67,66 @@ class _LocationTableState extends State<LocationTable> {
             "Locations Captured",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, decoration: TextDecoration.underline),
           ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              showCheckboxColumn: false,
-              columns: const [
-                DataColumn(
-                    label: Text(
-                  'Date',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-                DataColumn(
-                    label: Text(
-                  'Time',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-                DataColumn(
-                    label: Text(
-                  'Latitude',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-                DataColumn(
-                    label: Text(
-                  'Longitude',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                )),
-              ],
-              onSelectAll: (val) {
-                setState(() {
-                  _selectedIndex = -1;
-                });
-              },
-              rows: sortedEntries.map((entry) {
-                final index = entry.key;
-                return DataRow(
-                  cells: [
-                    DataCell(Text(DateFormat('MMM d, yyyy').format(entry.dateTime))),
-                    DataCell(Text(DateFormat('h:mm a').format(entry.dateTime))),
-                    DataCell(Text('${entry.latitude}')),
-                    DataCell(Text('${entry.longitude}')),
-                  ],
-                  selected: index == _selectedIndex,
-                  onSelectChanged: (bool? value) {
-                    setState(() {
-                      _selectedIndex = value! ? index : null;
-                    });
-                    if (value == true) {
-                      showActionDialog(context, entry);
-                    } else {
+          Scrollbar(
+            controller: _scrollController,
+            thumbVisibility: widget.entries.isNotEmpty,
+            child: SingleChildScrollView(
+              controller: _scrollController,
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                showCheckboxColumn: false,
+                columns: const [
+                  DataColumn(
+                      label: Text(
+                    'Date',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Time',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Latitude',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+                  DataColumn(
+                      label: Text(
+                    'Longitude',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  )),
+                ],
+                onSelectAll: (val) {
+                  setState(() {
+                    _selectedIndex = -1;
+                  });
+                },
+                rows: sortedEntries.map((entry) {
+                  final index = entry.key;
+                  return DataRow(
+                    cells: [
+                      DataCell(Text(DateFormat('MMM d, yyyy').format(entry.dateTime))),
+                      DataCell(Text(DateFormat('h:mm a').format(entry.dateTime))),
+                      DataCell(Text('${entry.latitude}')),
+                      DataCell(Text('${entry.longitude}')),
+                    ],
+                    selected: index == _selectedIndex,
+                    onSelectChanged: (bool? value) {
                       setState(() {
-                        entry.isSelected = false;
+                        _selectedIndex = value! ? index : null;
                       });
-                    }
-                  },
-                );
-              }).toList(),
+                      if (value == true) {
+                        showActionDialog(context, entry);
+                      } else {
+                        setState(() {
+                          entry.isSelected = false;
+                        });
+                      }
+                    },
+                  );
+                }).toList(),
+              ),
             ),
           ),
         ],

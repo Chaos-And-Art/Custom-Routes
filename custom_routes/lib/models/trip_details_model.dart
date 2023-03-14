@@ -8,5 +8,5 @@ class TripDetails {
   String? distance;
   String? expectedDuration;
 
-  TripDetails({this.name, this.startDateTime, this.endDateTime, this.origin, this.destination, this.distance, this.expectedDuration});
+  TripDetails({this.tripID, this.name, this.startDateTime, this.endDateTime, this.origin, this.destination, this.distance, this.expectedDuration});
 }

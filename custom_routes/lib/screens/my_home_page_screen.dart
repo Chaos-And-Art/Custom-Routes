@@ -1,3 +1,4 @@
+import 'package:custom_routes/models/trip_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -117,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const CreateTrip(),
+                      builder: (context) => CreateTrip(tripDetails: TripDetails()),
                     ),
                   );
                 },

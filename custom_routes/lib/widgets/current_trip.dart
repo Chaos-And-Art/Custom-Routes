@@ -1,10 +1,13 @@
 import 'package:accordion/accordion.dart';
 import 'package:accordion/controllers.dart';
+import 'package:custom_routes/models/trip_details_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/manage_trips/manage_trip_bloc.dart';
+import '../blocs/manage_trips/manage_trip_event.dart';
 import '../blocs/manage_trips/manage_trip_state.dart';
+import '../screens/create_trip_screen.dart';
 
 class CurrentTrip extends StatefulWidget {
   const CurrentTrip({super.key});
@@ -37,10 +40,12 @@ class _CurrentTripState extends State<CurrentTrip> {
                 headerBackgroundColorOpened: Colors.red,
                 header: Text(state.data.name ?? "-----", style: _headerStyle),
                 contentHorizontalPadding: 10,
+                contentVerticalPadding: 2,
                 contentBorderWidth: 1,
                 content: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 10),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -159,6 +164,42 @@ class _CurrentTripState extends State<CurrentTrip> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            TripDetails currentTrip = TripDetails(
+                              tripID: state.data.tripID,
+                              name: state.data.name,
+                              startDateTime: state.data.startDateTime,
+                              endDateTime: state.data.endDateTime,
+                              origin: state.data.origin,
+                              destination: state.data.destination,
+                              distance: state.data.distance,
+                              expectedDuration: state.data.expectedDuration,
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CreateTrip(tripDetails: currentTrip),
+                              ),
+                            );
+                          },
+                          child: const Text('Edit'),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            final myBloc = BlocProvider.of<ManageTripBloc>(context);
+                            myBloc.add(CancelTripEvent("")); //WILL NEED TO PASS IN CORRECT ID
+                          },
+                          style: ElevatedButton.styleFrom(backgroundColor: Colors.red[400]),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    )
                   ],
                 ),
                 // onOpenSection: () => print('onOpenSection ...'),
