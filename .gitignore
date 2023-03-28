@@ -156,3 +156,14 @@ app.*.symbols
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 !/dev/ci/**/Gemfile.lock
+custom_routes/macos/Runner/GoogleService-Info.plist
+
+custom_routes/macos/firebase_app_id_file.json
+
+custom_routes/ios/Runner/GoogleService-Info.plist
+
+custom_routes/ios/firebase_app_id_file.json
+
+custom_routes/android/app/google-services.json
+
+custom_routes/lib/firebase_options.dart

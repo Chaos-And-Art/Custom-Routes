@@ -5,8 +5,10 @@ import 'package:custom_routes/models/location_entry_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../blocs/manage_trips/manage_trip_bloc.dart';
 import '../blocs/manage_trips/manage_trip_state.dart';
+import '../services/timer_service.dart';
 import '../widgets/countdown_timer.dart';
 
 final List<LocationEntry> _entries = [];
@@ -45,31 +47,33 @@ class _CaptureLocationState extends State<CaptureLocation> {
               children: [
                 TimerScreen(onRequestLocation: _captureCurrentLocation),
                 const SizedBox(height: 50),
-                _tripStarted
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: _captureCurrentLocation,
-                            child: const Text('Add Location'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('Extra Button'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              final myBloc = BlocProvider.of<ManageTripBloc>(context);
-                              myBloc.add(CancelTripEvent("")); //WILL NEED TO PASS IN CORRECT ID
-                            },
-                            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[400]),
-                            child: const Text('Cancel Trip'),
-                          ),
-                        ],
-                      )
-                    : const SizedBox(height: 0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _captureCurrentLocation,
+                      child: const Text('Add Location'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Extra Button'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        final myBloc = BlocProvider.of<ManageTripBloc>(context);
+                        myBloc.add(CancelTripEvent("")); //WILL NEED TO PASS IN CORRECT ID
+                        final timerService = Provider.of<TimerService>(context, listen: false);
+                        timerService.resetTimer();
+                        TimerScreen.displayResetButton.value = false;
+                        _entries.clear();
+                      },
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red[400]),
+                      child: const Text('Cancel Trip'),
+                    ),
+                  ],
+                ),
                 const CurrentTrip(),
-                _tripStarted ? LocationTable(entries: _entries) : const SizedBox(height: 0),
+                _entries.isNotEmpty ? LocationTable(entries: _entries) : const SizedBox(),
                 const SizedBox(
                   height: 75,
                 )

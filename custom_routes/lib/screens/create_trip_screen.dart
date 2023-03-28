@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import '../blocs/manage_trips/manage_trip_bloc.dart';
 import '../blocs/manage_trips/manage_trip_event.dart';
+import '../models/location_place.dart';
 import '../models/location_suggestion.dart';
 import '../services/search_location_service.dart';
 import '../widgets/search_location.dart';
@@ -60,9 +61,9 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   void _createNewTrip() {
-    _tripDetails.tripID = Random().nextInt(1000); //WILL NEED TO COME UP WITH A BETTER ID SETTER
+    tripDetails.tripID = Random().nextInt(1000); //WILL NEED TO COME UP WITH A BETTER ID SETTER
     final myBloc = BlocProvider.of<ManageTripBloc>(context);
-    myBloc.add(SendNewTripDataEvent(_tripDetails));
+    myBloc.add(SendNewTripDataEvent(tripDetails));
     Navigator.pop(context);
   }
 

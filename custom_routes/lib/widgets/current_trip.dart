@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/manage_trips/manage_trip_bloc.dart';
-import '../blocs/manage_trips/manage_trip_event.dart';
 import '../blocs/manage_trips/manage_trip_state.dart';
-import '../screens/create_trip_screen.dart';
 
 class CurrentTrip extends StatefulWidget {
   const CurrentTrip({super.key});

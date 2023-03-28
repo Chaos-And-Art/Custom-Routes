@@ -2,9 +2,8 @@ import 'package:custom_routes/services/timer_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-bool _displayResetButton = false;
-
 class TimerScreen extends StatefulWidget {
+  static ValueNotifier<bool> displayResetButton = ValueNotifier<bool>(false);
   const TimerScreen({super.key, required this.onRequestLocation});
 
   final Function() onRequestLocation;
@@ -28,7 +27,7 @@ class _TimerScreenState extends State<TimerScreen> {
       _restartTimer();
     });
     if (!timerService.isRunning) {
-      _displayResetButton = false;
+      TimerScreen.displayResetButton.value = false;
     }
   }
 
@@ -36,7 +35,7 @@ class _TimerScreenState extends State<TimerScreen> {
     final timerService = Provider.of<TimerService>(context, listen: false);
     timerService.pauseTimer();
     timerService.resetTimer();
-    _displayResetButton = false;
+    TimerScreen.displayResetButton.value = false;
   }
 
   @override
@@ -91,7 +90,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   onPressed: () {
                     if (!timerService.isRunning) {
                       widget.onRequestLocation();
-                      _displayResetButton = true;
+                      TimerScreen.displayResetButton.value = true;
                       timerService.startTimer(timerFinished: () {
                         _restartTimer();
                       });
@@ -111,11 +110,6 @@ class _TimerScreenState extends State<TimerScreen> {
                         size: 45.0,
                         color: Colors.white,
                       ),
-                      // const SizedBox(height: 8.0),
-                      // Text(
-                      //   timerService.isRunning ? 'Pause' : 'Start',
-                      //   style: const TextStyle(fontSize: 18),
-                      // ),
                     ],
                   ),
                 ),
@@ -126,7 +120,7 @@ class _TimerScreenState extends State<TimerScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  if (_displayResetButton)
+                  if (TimerScreen.displayResetButton.value)
                     ElevatedButton(
                       onPressed: _resetTimer,
                       child: const Text('Reset'),

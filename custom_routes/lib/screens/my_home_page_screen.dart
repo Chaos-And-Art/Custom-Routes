@@ -118,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => CreateTrip(tripDetails: TripDetails()),
+                      builder: (context) => const CreateTrip(),
                     ),
                   );
                 },
